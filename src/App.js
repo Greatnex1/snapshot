@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from "react";
+import Search from "./components/Search";
+import {unsplash} from "./api/unsplash";
+import ImageList from "./components/ImageList"
+import { createPortal } from "react-dom";
+import { useEffect } from "react";
 
-function App() {
+const App= () => {
+  const [searchTerm, setSearchTerm] = useState("random")
+  const [searchImage, setImages] = useState([])
+  const getSearchTerm = (term) =>{
+    console.log(term);
+    setSearchTerm(term)
+  };
+ 
+  useEffect(() => {
+    const fetchPhotos = async () => {
+       const result =  await unsplash.get(`/search/photos?query=${searchTerm}`)
+
+      setImages(result.data.results)
+      console.log(result);
+    }
+      fetchPhotos()
+  }, 
+  [searchImage]);
+  
+
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      const result =  await unsplash.get("/photos/random?count=30")
+      setImages(result.data)
+
+    }
+  } 
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    {
+      createPortal(  <Search getSearchTerm={getSearchTerm}/>,
+      document.querySelector("#search"))
+    }
+    
+      <ImageList images={searchImage} />
+      </>
+
   );
 }
 
-export default App;
+export default App
