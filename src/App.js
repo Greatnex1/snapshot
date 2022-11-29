@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { useEffect } from "react";
 
 const App= () => {
-  const [searchTerm, setSearchTerm] = useState("random")
+  const [searchTerm, setSearchTerm] = useState("love")
   const [searchImage, setImages] = useState([])
   const getSearchTerm = (term) =>{
     console.log(term);
